@@ -34,6 +34,10 @@ export default class BrowserFetchStreamTransport extends BrowserFetchTransport {
     const reqHeaders = { ...request.headers };
     reqHeaders[Headers.ACCEPT] = ContentTypes.TEXT_EVENT_STREAM;
     reqHeaders[Headers.CONTENT_TYPE] = ContentTypes.TEXT_EVENT_STREAM;
+    // Check for PWA and bypass service worker onFetch specific to angular service-worker.js
+    if ('ng' in window && 'serviceWorker' in navigator) {
+      reqHeaders['ngsw-bypass'] = true;
+    }
 
     // Verify we can start a request with current params and potentially
     // Force ourselves to refresh a token.
